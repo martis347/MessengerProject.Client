@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -92,5 +93,31 @@ namespace Messenger.WebApi
                 }
             }
         }
+
+        public static async Task<string> GetNewestText()
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:1234/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(String.Concat("api/message/getText?username=", Username, "&roomname=", RoomName));
+                    var a = await response.Content.ReadAsStringAsync();
+                    if (response.StatusCode!=(HttpStatusCode) 200)
+                    {
+                        Console.WriteLine(response.ReasonPhrase);
+                    }
+                    return a;
+                }
+                catch (Exception e)
+                {
+                    return "ERROR";
+                }
+            }
+        }
+
     }
 }
