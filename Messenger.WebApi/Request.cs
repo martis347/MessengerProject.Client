@@ -3,15 +3,16 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace Messenger.WebApi
 {
     public static class Request
     {
-        public static string Username { set; private get; }
+        public static string  Username { set; private get; }
         private static string RoomName { set; get; }
 
-        public static async Task<bool> Register()
+        public static async Task<RequestStatus> Register()
         {
             using (var client = new HttpClient())
             {
@@ -22,16 +23,17 @@ namespace Messenger.WebApi
                 try
                 {
                     HttpResponseMessage response = await client.GetAsync(String.Concat("api/users/createuser?username=", Username));
-                    return true;
+                    RequestStatus request = GetRequestStatus(response);
+                    return request;
                 }
                 catch (Exception)
                 {
-                    return false;
+                    return RequestStatus.ConnectionError;
                 }
             }
         }
 
-        public static async Task<bool> JoinRoom(string roomName)
+        public static async Task<RequestStatus> JoinRoom(string roomName)
         {
             RoomName = roomName;
             using (var client = new HttpClient())
@@ -42,17 +44,18 @@ namespace Messenger.WebApi
                 try
                 {
                     HttpResponseMessage response = await client.GetAsync(String.Concat("api/users/joinRoom?username=", Username, "&&roomName=", roomName));
-                    return true;
+                    RequestStatus request = GetRequestStatus(response);
+                    return request;
                 }
                 catch (Exception)
                 {
-                    return false;
+                    return RequestStatus.ConnectionError;
                 }
 
             }
         }
 
-        public static async Task<bool> CreateRoom(string roomName)
+        public static async Task<RequestStatus> CreateRoom(string roomName)
         {
             RoomName = roomName;
             using (var client = new HttpClient())
@@ -64,16 +67,17 @@ namespace Messenger.WebApi
                 try
                 {
                     HttpResponseMessage response = await client.GetAsync(String.Concat("api/users/createRoom?username=", Username, "&&roomName=", roomName));
-                    return true;
+                    RequestStatus request = GetRequestStatus(response);
+                    return request;
                 }
                 catch (Exception)
                 {
-                    return false;
+                    return RequestStatus.ConnectionError;
                 }
             }
         }
 
-        public static async Task<bool> Write(string message)
+        public static async Task<RequestStatus> Write(string message)
         {
             using (var client = new HttpClient())
             {
@@ -84,17 +88,17 @@ namespace Messenger.WebApi
                 try
                 {
                     HttpResponseMessage response = await client.GetAsync(String.Concat("api/message/send?username=",Username,"&message=",message,"&roomname=",RoomName));
-
-                    return true;
+                    RequestStatus request = GetRequestStatus(response);
+                    return request;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    return false;
+                    return RequestStatus.ConnectionError;
                 }
             }
         }
 
-        public static async Task<string> GetNewestText()
+        public static async Task<ChatInfo> GetNewestText()
         {
             using (var client = new HttpClient())
             {
@@ -104,27 +108,40 @@ namespace Messenger.WebApi
 
                 try
                 {
-                    //HttpResponseMessage response = await client.GetAsync(String.Concat("api/message/getText?username=", Username, "&roomname=", RoomName));
-                    HttpResponseMessage response = await client.GetAsync("api/test/abc");
-                    if (response.StatusCode!=(HttpStatusCode) 200)
-                    {
-                        Console.WriteLine(response.ReasonPhrase);
-                    }
-                    return FormatResponse(response);
+                    HttpResponseMessage response = await client.GetAsync(String.Concat("api/message/getText?username=", Username, "&roomname=", RoomName));
+                    
+                    ChatInfo request = GetChatInfo(response);
+                    return request;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    return "ERROR";
+                    return new ChatInfo() {Status = RequestStatus.ConnectionError};
                 }
             }
         }
 
-        private static string FormatResponse(HttpResponseMessage response)
+        private static string FormatResponse(string value)
         {
-            var value = response.Content.ReadAsStringAsync().Result;
             value = value.Replace("\"", "");
             value = value.Replace("\\n", "\n");
             return value;
+        }
+
+        private static RequestStatus GetRequestStatus(HttpResponseMessage response)
+        {
+            var value = response.Content.ReadAsStringAsync().Result;
+            return (RequestStatus)Enum.Parse(typeof (RequestStatus), value);
+        }
+
+        private static ChatInfo GetChatInfo(HttpResponseMessage response)
+        {
+            var value = response.Content.ReadAsStringAsync().Result;
+
+            JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+            ChatInfo info = (ChatInfo)jsonSerializer.DeserializeObject(value);
+
+            info.NewMessages = FormatResponse(info.NewMessages);
+            return info;
         }
 
     }
