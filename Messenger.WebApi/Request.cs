@@ -100,23 +100,31 @@ namespace Messenger.WebApi
             {
                 client.BaseAddress = new Uri("http://localhost:1234/");
                 client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
 
                 try
                 {
-                    HttpResponseMessage response = await client.GetAsync(String.Concat("api/message/getText?username=", Username, "&roomname=", RoomName));
-                    var a = await response.Content.ReadAsStringAsync();
+                    //HttpResponseMessage response = await client.GetAsync(String.Concat("api/message/getText?username=", Username, "&roomname=", RoomName));
+                    HttpResponseMessage response = await client.GetAsync("api/test/abc");
                     if (response.StatusCode!=(HttpStatusCode) 200)
                     {
                         Console.WriteLine(response.ReasonPhrase);
                     }
-                    return a;
+                    return FormatResponse(response);
                 }
                 catch (Exception e)
                 {
                     return "ERROR";
                 }
             }
+        }
+
+        private static string FormatResponse(HttpResponseMessage response)
+        {
+            var value = response.Content.ReadAsStringAsync().Result;
+            value = value.Replace("\"", "");
+            value = value.Replace("\\n", "\n");
+            return value;
         }
 
     }

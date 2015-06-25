@@ -70,6 +70,7 @@ namespace MessengerProject.Client
                             : "\bFailed to send message");
                         break;
                     case 'u':
+                        Console.WriteLine("\b ");
                         var a = Request.GetNewestText().Result; 
                         Console.WriteLine(a);
                         break;
