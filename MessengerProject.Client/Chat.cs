@@ -11,7 +11,7 @@ namespace MessengerProject.Client
         private static bool _userIsWriting;
         readonly Thread _updater = new Thread(UpdateText);
 
-        public void Start()
+        public bool Start()
         {
             _exitChat = false;
             _userIsWriting = false;
@@ -19,6 +19,7 @@ namespace MessengerProject.Client
             GiveStartupInfo();
 
             ChooseCommands();
+            return true;
         }
     
         private void ChooseCommands()
@@ -66,6 +67,9 @@ namespace MessengerProject.Client
                 case RequestStatus.RoomAlreadyExists:
                     Console.WriteLine("Room with given name already exists");
                     break;
+                case RequestStatus.RoomNameIsNull:
+                    Console.WriteLine("Room name cannot be empty");
+                    break;
                 case RequestStatus.Success:
                     Console.WriteLine("Successfully created room");
                     StartTextUpdater();
@@ -87,6 +91,9 @@ namespace MessengerProject.Client
                 case RequestStatus.RoomNotFound:
                     Console.WriteLine("Room with given name was not found");
                     break;
+                case RequestStatus.RoomNameIsNull:
+                    Console.WriteLine("Room name cannot be empty");
+                    break;
                 case RequestStatus.Success:
                     Console.WriteLine("Successfully joined room");
                     StartTextUpdater();
@@ -96,11 +103,18 @@ namespace MessengerProject.Client
 
         private void Register()
         {
-            RequestStatus status = RequestStatus.ConnectionError;;
+            var status = RequestStatus.ConnectionError;
             while (status != RequestStatus.Success)
             {
                 Console.WriteLine("Choose username: ");
-                Request.Username = Console.ReadLine();
+                string username = Console.ReadLine();
+                if (username=="")
+                {
+                    Console.WriteLine("Username cannot be empty");
+                    continue;
+                }
+                Request.Username = username;
+                
                 status = Request.Register().Result;
 
                 switch (status)

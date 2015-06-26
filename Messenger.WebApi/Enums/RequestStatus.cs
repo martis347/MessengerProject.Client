@@ -9,6 +9,8 @@
         RoomIsFull,
         Success,
         RoomIsEmpty,
-        ConnectionError
+        ConnectionError,
+        UsernameIsNull,
+        RoomNameIsNull
     }
 }

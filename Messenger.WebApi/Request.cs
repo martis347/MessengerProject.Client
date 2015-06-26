@@ -36,6 +36,9 @@ namespace Messenger.WebApi
         public static async Task<RequestStatus> JoinRoom(string roomName)
         {
             RoomName = roomName;
+            if (roomName == "")
+                return RequestStatus.RoomNameIsNull;
+
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:1234/");
@@ -57,6 +60,9 @@ namespace Messenger.WebApi
 
         public static async Task<RequestStatus> CreateRoom(string roomName)
         {
+            if (roomName == "")
+                return RequestStatus.RoomNameIsNull;
+
             RoomName = roomName;
             using (var client = new HttpClient())
             {
