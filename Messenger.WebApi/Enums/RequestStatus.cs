@@ -1,4 +1,4 @@
-﻿namespace Messenger.WebApi
+﻿namespace Messenger.WebApi.Enums
 {
     public enum RequestStatus
     {

@@ -1,6 +1,6 @@
-﻿namespace MessengerProject.Client.Enums
+﻿namespace Messenger.WebApi.Enums
 {
-    public enum Action
+    public enum RequestAction
     {
         Register = 'r',
         JoinRoom = 'j',

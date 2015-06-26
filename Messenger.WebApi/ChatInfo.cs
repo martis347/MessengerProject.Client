@@ -1,4 +1,6 @@
-﻿namespace Messenger.WebApi
+﻿using Messenger.WebApi.Enums;
+
+namespace Messenger.WebApi
 {
     public class ChatInfo
     {

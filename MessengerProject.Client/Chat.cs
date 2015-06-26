@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Messenger.WebApi;
-using Action = MessengerProject.Client.Enums.Action;
+using Messenger.WebApi.Enums;
 
 namespace MessengerProject.Client
 {
@@ -25,22 +25,22 @@ namespace MessengerProject.Client
             while (!_exitChat)
             {
                 ConsoleKeyInfo key = Console.ReadKey();
-                Action action = (Action) Char.ToLower(key.KeyChar);
-                switch (action)
+                RequestAction requestAction = (RequestAction) Char.ToLower(key.KeyChar);
+                switch (requestAction)
                 {
-                    case Action.Register:
+                    case RequestAction.Register:
                         Register();
                         break;
-                    case Action.JoinRoom:
+                    case RequestAction.JoinRoom:
                         JoinRoom();
                         break;
-                    case Action.CreateRoom:
+                    case RequestAction.CreateRoom:
                         CreateRoom();
                         break;
-                    case Action.Message:
+                    case RequestAction.Message:
                         Message();
                         break;
-                    case Action.Exit:
+                    case RequestAction.Exit:
                         _exitChat = true;
                         _updater.Abort();
                         return;
