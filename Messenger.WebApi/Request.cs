@@ -135,13 +135,20 @@ namespace Messenger.WebApi
 
         private static ChatInfo GetChatInfo(HttpResponseMessage response)
         {
-            var value = response.Content.ReadAsStringAsync().Result;
+            string value = response.Content.ReadAsStringAsync().Result;
 
-            JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-            ChatInfo info = (ChatInfo)jsonSerializer.DeserializeObject(value);
+            try
+            {
+                JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+                ChatInfo info = jsonSerializer.Deserialize<ChatInfo>(value); 
 
-            info.NewMessages = FormatResponse(info.NewMessages);
-            return info;
+                info.NewMessages = FormatResponse(info.NewMessages);
+                return info;
+            }
+            catch (Exception) 
+            {
+                throw new Exception("Unable to parse response");
+            }
         }
 
     }

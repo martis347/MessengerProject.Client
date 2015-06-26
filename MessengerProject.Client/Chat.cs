@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using Messenger.WebApi;
 using Messenger.WebApi.Enums;
@@ -131,8 +132,19 @@ namespace MessengerProject.Client
         {
             while (true)
             {
-                Console.WriteLine(Request.GetNewestText().Result);
-                Thread.Sleep(500);
+                ChatInfo chatInfo = Request.GetNewestText().Result;
+
+                switch (chatInfo.Status)
+                {
+                    case RequestStatus.ConnectionError:
+                        Console.WriteLine("No response from server");
+                        Thread.Sleep(1500);
+                        break;
+                    case RequestStatus.Success:
+                        Console.WriteLine(chatInfo.NewMessages);
+                        Thread.Sleep(500);
+                        break;
+                }
             }
         }
 
