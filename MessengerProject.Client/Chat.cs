@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using Messenger.WebApi;
 using Messenger.WebApi.Enums;
@@ -9,12 +8,13 @@ namespace MessengerProject.Client
     internal class Chat
     {
         private bool _exitChat;
-
+        private static bool _userIsWriting;
         readonly Thread _updater = new Thread(UpdateText);
 
         public void Start()
         {
             _exitChat = false;
+            _userIsWriting = false;
 
             GiveStartupInfo();
 
@@ -120,6 +120,7 @@ namespace MessengerProject.Client
 
         private void Message()
         {
+            _userIsWriting = true;
             Console.WriteLine("\bEnter your message\n");
 
             RequestStatus status = Request.Write(Console.ReadLine()).Result;
@@ -132,28 +133,32 @@ namespace MessengerProject.Client
                 case RequestStatus.Success:
                     break;
             }
+            _userIsWriting = false;
         }
 
         private static void UpdateText()
         {
             while (true)
             {
-                ChatInfo chatInfo = Request.GetNewestText().Result;
-
-                switch (chatInfo.Status)
+                if (!_userIsWriting)
                 {
-                    case RequestStatus.ConnectionError:
-                        Console.WriteLine("No response from server");
-                        Thread.Sleep(1500);
-                        break;
-                    case RequestStatus.Success:
-                        string message = chatInfo.NewMessages;
-                        if (message !="")
-                        {
-                            Console.WriteLine(message);
-                        }
-                        Thread.Sleep(500);
-                        break;
+                    ChatInfo chatInfo = Request.GetNewestText().Result;
+
+                    switch (chatInfo.Status)
+                    {
+                        case RequestStatus.ConnectionError:
+                            Console.WriteLine("");
+                            Thread.Sleep(1500);
+                            break;
+                        case RequestStatus.Success:
+                            string message = chatInfo.NewMessages;
+                            if (message != "")
+                            {
+                                Console.WriteLine(message);
+                            }
+                            Thread.Sleep(500);
+                            break;
+                    }
                 }
             }
         }
