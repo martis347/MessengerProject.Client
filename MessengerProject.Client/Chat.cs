@@ -161,8 +161,9 @@ namespace MessengerProject.Client
 
         private void GiveStartupInfo()
         {
+            Register();
+
             Console.WriteLine("Commands list:\n" +
-                              "To register press R\n" +
                               "To create room press C and type room name \n" +
                               "To joinRoom press J and type room name \n" +
                               "To type message to chat room press M and type your message\n" +
