@@ -46,6 +46,5 @@ namespace MessengerProject.Client
             chat.Start();
             ActionsOnExit();
         }
-
     }
 }

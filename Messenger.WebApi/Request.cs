@@ -83,6 +83,29 @@ namespace Messenger.WebApi
             }
         }
 
+        public static async Task<RequestStatus> LeaveRoom()
+        {
+            RoomName = "";
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:1234/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(String.Concat("api/users/leaveRoom?username=", Username));
+                    RequestStatus request = GetRequestStatus(response);
+                    return request;
+                }
+                catch (Exception)
+                {
+                    return RequestStatus.ConnectionError;
+                }
+            }
+        }
+
+
         public static async Task<RequestStatus> Write(string message)
         {
             using (var client = new HttpClient())
