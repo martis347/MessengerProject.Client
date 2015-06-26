@@ -96,19 +96,25 @@ namespace MessengerProject.Client
 
         private void Register()
         {
-            RequestStatus status = Request.Register().Result;
-
-            switch (status)
+            RequestStatus status = RequestStatus.ConnectionError;;
+            while (status != RequestStatus.Success)
             {
-                case RequestStatus.ConnectionError:
-                    Console.WriteLine("No response from server");
-                    break;
-                case RequestStatus.UserAlreadyExists:
-                    Console.WriteLine("User with given username already exists");
-                    break;
-                case RequestStatus.Success:
-                    Console.WriteLine("Successfully registered");
-                    break;
+                Console.WriteLine("Choose username: ");
+                Request.Username = Console.ReadLine();
+                status = Request.Register().Result;
+
+                switch (status)
+                {
+                    case RequestStatus.ConnectionError:
+                        Console.WriteLine("No response from server");
+                        break;
+                    case RequestStatus.UserAlreadyExists:
+                        Console.WriteLine("User with given username already exists");
+                        break;
+                    case RequestStatus.Success:
+                        Console.WriteLine("Successfully registered");
+                        break;
+                }
             }
         }
 
@@ -153,22 +159,14 @@ namespace MessengerProject.Client
             _updater.Start();
         }
 
-        private static void GiveStartupInfo()
+        private void GiveStartupInfo()
         {
-            GetUsername();
-
             Console.WriteLine("Commands list:\n" +
                               "To register press R\n" +
                               "To create room press C and type room name \n" +
                               "To joinRoom press J and type room name \n" +
                               "To type message to chat room press M and type your message\n" +
                               "To EXIT press esc");
-        }
-
-        private static void GetUsername()
-        {
-            Console.WriteLine("Choose username: ");
-            Request.Username = Console.ReadLine();
         }
     }
 }
