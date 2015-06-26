@@ -147,7 +147,11 @@ namespace MessengerProject.Client
                         Thread.Sleep(1500);
                         break;
                     case RequestStatus.Success:
-                        Console.WriteLine(chatInfo.NewMessages);
+                        string message = chatInfo.NewMessages;
+                        if (message !="")
+                        {
+                            Console.WriteLine(message);
+                        }
                         Thread.Sleep(500);
                         break;
                 }
