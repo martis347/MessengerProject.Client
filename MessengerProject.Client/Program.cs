@@ -1,6 +1,6 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Threading;
+using Messenger.WebApi;
 
 namespace MessengerProject.Client
 {
@@ -15,8 +15,7 @@ namespace MessengerProject.Client
 
         private static bool ActionsOnExit()
         {
-            Console.WriteLine("TYVM");
-            Thread.Sleep(1000);
+            Request.LeaveRoom().Wait();
             _exitSystem = true;
             return true;
         }
@@ -37,6 +36,7 @@ namespace MessengerProject.Client
             Program p = new Program();
             p.Start();
 
+            
             KeepThreadOn();
         }
 

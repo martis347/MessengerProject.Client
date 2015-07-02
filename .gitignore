@@ -48,5 +48,5 @@ obj
 packages
 
 *.suo
-*.DotSettings.user
+*.user
 # test
