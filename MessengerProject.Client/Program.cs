@@ -12,6 +12,7 @@ namespace MessengerProject.Client
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add = true);
         private delegate bool EventHandler();
+        static EventHandler _handler;
 
         private static bool ActionsOnExit()
         {
@@ -31,7 +32,8 @@ namespace MessengerProject.Client
 
         static void Main(string[] args)
         {
-            SetConsoleCtrlHandler(ActionsOnExit);
+            _handler += ActionsOnExit;
+            SetConsoleCtrlHandler(_handler);
 
             Program p = new Program();
             p.Start();
