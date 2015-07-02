@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessengerProject.Client", "MessengerProject.Client\MessengerProject.Client.csproj", "{12995C0F-D28A-42D8-821B-3F640E85567F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessengerProject.Client", "src\MessengerProject.Client\MessengerProject.Client.csproj", "{12995C0F-D28A-42D8-821B-3F640E85567F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.WebApi", "Messenger.WebApi\Messenger.WebApi.csproj", "{91E4EA08-5161-4059-912E-0D308067E09B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.WebApi", "src\Messenger.WebApi\Messenger.WebApi.csproj", "{91E4EA08-5161-4059-912E-0D308067E09B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{90F45417-105F-4811-A1CD-FCF794E23693}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3F9D56D8-64A6-41A9-90E0-7273419C08C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +28,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{12995C0F-D28A-42D8-821B-3F640E85567F} = {90F45417-105F-4811-A1CD-FCF794E23693}
+		{91E4EA08-5161-4059-912E-0D308067E09B} = {90F45417-105F-4811-A1CD-FCF794E23693}
 	EndGlobalSection
 EndGlobal
